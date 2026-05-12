@@ -1,0 +1,85 @@
+.toolbar {
+  display: flex;
+  align-items: center;
+  padding: 6px 12px;
+  justify-content: flex-end;
+  min-height: 52px;
+  flex-shrink: 0;
+}
+
+.toolbar__actions {
+  display: flex;
+  gap: 4px;
+}
+
+.toolbar__btn {
+  background: rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 6px;
+  padding: 5px 10px;
+  font-size: 11px;
+  font-weight: 500;
+  color: rgba(0, 0, 0, 0.55);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-family: inherit;
+  white-space: nowrap;
+}
+
+.toolbar__btn:hover {
+  background: rgba(0, 0, 0, 0.08);
+  color: rgba(0, 0, 0, 0.75);
+}
+
+.toolbar__btn:active {
+  background: rgba(0, 0, 0, 0.12);
+}
+
+.toolbar__separator {
+  width: 1px;
+  height: 20px;
+  background: rgba(0, 0, 0, 0.1);
+  margin: 0 4px;
+}
+
+.toolbar__btn--screenshot {
+  background: rgba(59, 130, 246, 0.08);
+  border-color: rgba(59, 130, 246, 0.15);
+  color: rgba(59, 130, 246, 0.8);
+}
+.toolbar__btn--screenshot:hover {
+  background: rgba(59, 130, 246, 0.14);
+  color: rgba(59, 130, 246, 1);
+}
+
+@media (prefers-color-scheme: dark) {
+  .toolbar__btn {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.08);
+    color: rgba(255, 255, 255, 0.55);
+  }
+  .toolbar__btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.8);
+  }
+  .toolbar__btn:active {
+    background: rgba(255, 255, 255, 0.14);
+  }
+  .toolbar__separator {
+    background: rgba(255, 255, 255, 0.1);
+  }
+  .toolbar__btn--screenshot {
+    background: rgba(59, 130, 246, 0.12);
+    border-color: rgba(59, 130, 246, 0.2);
+    color: rgba(100, 160, 255, 0.9);
+  }
+  .toolbar__btn--screenshot:hover {
+    background: rgba(59, 130, 246, 0.2);
+    color: rgba(130, 180, 255, 1);
+  }
+}

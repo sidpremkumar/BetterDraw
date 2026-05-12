@@ -1,0 +1,54 @@
+.canvas-container {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  height: 100%;
+  min-height: 0;
+  background: #ffffff;
+}
+
+.canvas-container .excalidraw {
+  --color-surface-primary-container: transparent !important;
+}
+
+.canvas-container .excalidraw .App-menu_top .buttonList {
+  /* Shift Excalidraw's top toolbar down to avoid titlebar overlay */
+  margin-top: 8px;
+}
+
+.canvas-empty {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(245, 245, 247, 0.3);
+}
+
+.canvas-empty__content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.canvas-empty__icon {
+  color: rgba(0, 0, 0, 0.15);
+}
+
+.canvas-empty__text {
+  color: rgba(0, 0, 0, 0.3);
+  font-size: 15px;
+  font-weight: 500;
+}
+
+@media (prefers-color-scheme: dark) {
+  .canvas-empty {
+    background: rgba(30, 30, 30, 0.3);
+  }
+  .canvas-empty__icon {
+    color: rgba(255, 255, 255, 0.15);
+  }
+  .canvas-empty__text {
+    color: rgba(255, 255, 255, 0.3);
+  }
+}
