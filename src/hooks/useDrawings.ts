@@ -9,6 +9,9 @@ export function useDrawings() {
   const [activeDrawingData, setActiveDrawingData] = useState<string | null>(
     null
   );
+  // Bumped whenever the active drawing's content is replaced in place (import /
+  // restore) so the Canvas remounts even though activeDrawingId is unchanged.
+  const [dataNonce, setDataNonce] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
 
   const selectDrawing = useCallback(async (id: string) => {
@@ -119,10 +122,64 @@ export function useDrawings() {
     []
   );
 
+  const toggleStarById = useCallback(async (id: string) => {
+    const updated = await cmds.toggleStarDrawing(id);
+    setDrawings((prev) => prev.map((d) => (d.id === id ? updated : d)));
+  }, []);
+
+  const importDrawingFile = useCallback(async (path: string) => {
+    const { meta, data } = await cmds.importDrawing(path);
+    setDrawings((prev) => [meta, ...prev]);
+    setActiveDrawingId(meta.id);
+    setActiveDrawingData(data);
+    setDataNonce((n) => n + 1);
+    return meta;
+  }, []);
+
+  const importIntoActiveDrawing = useCallback(
+    async (path: string) => {
+      if (!activeDrawingId) return;
+      const { meta, data } = await cmds.importIntoDrawing(activeDrawingId, path);
+      setDrawings((prev) => prev.map((d) => (d.id === meta.id ? meta : d)));
+      setActiveDrawingData(data);
+      setDataNonce((n) => n + 1);
+    },
+    [activeDrawingId]
+  );
+
+  const importJsonIntoActiveDrawing = useCallback(
+    async (content: string) => {
+      if (!activeDrawingId) return;
+      const { meta, data } = await cmds.importJsonIntoDrawing(
+        activeDrawingId,
+        content
+      );
+      setDrawings((prev) => prev.map((d) => (d.id === meta.id ? meta : d)));
+      setActiveDrawingData(data);
+      setDataNonce((n) => n + 1);
+    },
+    [activeDrawingId]
+  );
+
+  const restoreVersionById = useCallback(
+    async (versionId: string) => {
+      if (!activeDrawingId) return;
+      const { meta, data } = await cmds.restoreVersion(
+        activeDrawingId,
+        versionId
+      );
+      setDrawings((prev) => prev.map((d) => (d.id === meta.id ? meta : d)));
+      setActiveDrawingData(data);
+      setDataNonce((n) => n + 1);
+    },
+    [activeDrawingId]
+  );
+
   return {
     drawings,
     activeDrawingId,
     activeDrawingData,
+    dataNonce,
     isLoading,
     selectDrawing,
     createDrawing,
@@ -131,5 +188,10 @@ export function useDrawings() {
     archiveDrawingById,
     unarchiveDrawingById,
     renameDrawingById,
+    toggleStarById,
+    importDrawingFile,
+    importIntoActiveDrawing,
+    importJsonIntoActiveDrawing,
+    restoreVersionById,
   };
 }

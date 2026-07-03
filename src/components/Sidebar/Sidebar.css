@@ -58,8 +58,71 @@
   color: rgba(0, 0, 0, 0.6);
 }
 
-.sidebar__new-btn {
+.sidebar__search {
+  position: relative;
+  margin: 0 8px 6px;
+  display: flex;
+  align-items: center;
+}
+
+.sidebar__search-icon {
+  position: absolute;
+  left: 8px;
+  color: rgba(0, 0, 0, 0.35);
+  pointer-events: none;
+}
+
+.sidebar__search-input {
+  flex: 1;
+  width: 100%;
+  padding: 6px 26px 6px 28px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.5);
+  font-size: 12px;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", sans-serif;
+  color: rgba(0, 0, 0, 0.85);
+  outline: none;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.sidebar__search-input::placeholder {
+  color: rgba(0, 0, 0, 0.35);
+}
+
+.sidebar__search-input:focus {
+  border-color: rgba(0, 122, 255, 0.5);
+  background: rgba(255, 255, 255, 0.85);
+}
+
+.sidebar__search-clear {
+  position: absolute;
+  right: 4px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: rgba(0, 0, 0, 0.35);
+  padding: 4px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.12s, color 0.12s;
+}
+
+.sidebar__search-clear:hover {
+  background: rgba(0, 0, 0, 0.08);
+  color: rgba(0, 0, 0, 0.65);
+}
+
+.sidebar__actions {
+  display: flex;
+  gap: 6px;
   margin: 0 8px 4px;
+}
+
+.sidebar__new-btn {
+  flex: 1;
   padding: 6px 10px;
   border: none;
   border-radius: 6px;
@@ -71,12 +134,32 @@
   transition: background 0.15s;
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 5px;
   font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", sans-serif;
 }
 
 .sidebar__new-btn:hover {
   background: rgba(0, 122, 255, 0.18);
+}
+
+.sidebar__import-btn {
+  flex-shrink: 0;
+  padding: 6px 9px;
+  border: none;
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.05);
+  color: rgba(0, 0, 0, 0.55);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sidebar__import-btn:hover {
+  background: rgba(0, 0, 0, 0.1);
+  color: rgba(0, 0, 0, 0.8);
 }
 
 .sidebar__list {
@@ -106,6 +189,82 @@
 .sidebar__empty p {
   font-size: 12px;
   color: rgba(0, 0, 0, 0.3);
+  margin: 0;
+}
+
+/* Starred accordion */
+.sidebar__starred-section {
+  flex-shrink: 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  margin: 0 0 4px;
+}
+
+.sidebar__section-toggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  padding: 8px 12px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: 600;
+  color: rgba(0, 0, 0, 0.4);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", sans-serif;
+  transition: color 0.15s;
+}
+
+.sidebar__section-toggle:hover {
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.sidebar__section-chevron {
+  transition: transform 0.2s ease;
+  flex-shrink: 0;
+}
+
+.sidebar__section-chevron--open {
+  transform: rotate(90deg);
+}
+
+.sidebar__section-count {
+  margin-left: auto;
+  font-size: 10px;
+  font-weight: 500;
+  color: rgba(0, 0, 0, 0.25);
+  background: rgba(0, 0, 0, 0.05);
+  padding: 1px 6px;
+  border-radius: 10px;
+}
+
+.sidebar__section-list {
+  padding: 0 6px 6px;
+  max-height: 240px;
+  overflow-y: auto;
+}
+
+.sidebar__section-list::-webkit-scrollbar {
+  width: 5px;
+}
+
+.sidebar__section-list::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.12);
+  border-radius: 3px;
+}
+
+.sidebar__search-empty,
+.sidebar__archive-empty {
+  padding: 12px 10px;
+  text-align: center;
+}
+
+.sidebar__search-empty p,
+.sidebar__archive-empty p {
+  font-size: 11px;
+  color: rgba(0, 0, 0, 0.35);
   margin: 0;
 }
 
@@ -191,6 +350,14 @@
   .sidebar__new-btn:hover {
     background: rgba(0, 122, 255, 0.25);
   }
+  .sidebar__import-btn {
+    background: rgba(255, 255, 255, 0.08);
+    color: rgba(255, 255, 255, 0.6);
+  }
+  .sidebar__import-btn:hover {
+    background: rgba(255, 255, 255, 0.14);
+    color: rgba(255, 255, 255, 0.9);
+  }
   .sidebar__list::-webkit-scrollbar-thumb {
     background: rgba(255, 255, 255, 0.1);
   }
@@ -215,5 +382,49 @@
   }
   .sidebar__archive-list::-webkit-scrollbar-thumb {
     background: rgba(255, 255, 255, 0.1);
+  }
+
+  .sidebar__search-input {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.9);
+  }
+  .sidebar__search-input::placeholder {
+    color: rgba(255, 255, 255, 0.35);
+  }
+  .sidebar__search-input:focus {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(0, 122, 255, 0.6);
+  }
+  .sidebar__search-icon {
+    color: rgba(255, 255, 255, 0.35);
+  }
+  .sidebar__search-clear {
+    color: rgba(255, 255, 255, 0.35);
+  }
+  .sidebar__search-clear:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  .sidebar__starred-section {
+    border-bottom-color: rgba(255, 255, 255, 0.06);
+  }
+  .sidebar__section-toggle {
+    color: rgba(255, 255, 255, 0.4);
+  }
+  .sidebar__section-toggle:hover {
+    color: rgba(255, 255, 255, 0.6);
+  }
+  .sidebar__section-count {
+    color: rgba(255, 255, 255, 0.25);
+    background: rgba(255, 255, 255, 0.06);
+  }
+  .sidebar__section-list::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+  }
+  .sidebar__search-empty p,
+  .sidebar__archive-empty p {
+    color: rgba(255, 255, 255, 0.35);
   }
 }

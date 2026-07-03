@@ -90,6 +90,57 @@
   color: rgba(0, 0, 0, 0.7);
 }
 
+.drawing-item__star {
+  color: rgba(0, 0, 0, 0.4);
+}
+
+.drawing-item__star:hover {
+  background: rgba(245, 184, 0, 0.15);
+  color: #f5b800;
+}
+
+.drawing-item--starred .drawing-item__star {
+  color: #f5b800;
+}
+
+.drawing-item--starred .drawing-item__star:hover {
+  background: rgba(245, 184, 0, 0.2);
+  color: #d99e00;
+}
+
+/* When starred, keep the star visible at rest (not just on hover) */
+.drawing-item--starred .drawing-item__actions {
+  opacity: 1;
+  background: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+.drawing-item--starred .drawing-item__actions .drawing-item__rename,
+.drawing-item--starred .drawing-item__actions .drawing-item__archive,
+.drawing-item--starred .drawing-item__actions .drawing-item__unarchive,
+.drawing-item--starred .drawing-item__actions .drawing-item__delete {
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+
+.drawing-item--starred:hover .drawing-item__actions {
+  background: rgba(245, 245, 247, 0.85);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+.drawing-item--starred:hover .drawing-item__actions .drawing-item__rename,
+.drawing-item--starred:hover .drawing-item__actions .drawing-item__archive,
+.drawing-item--starred:hover .drawing-item__actions .drawing-item__unarchive,
+.drawing-item--starred:hover .drawing-item__actions .drawing-item__delete {
+  opacity: 1;
+}
+
+.drawing-item--starred.drawing-item--active:hover .drawing-item__actions {
+  background: rgba(220, 235, 255, 0.9);
+}
+
 .drawing-item__archive {
   color: rgba(0, 0, 0, 0.4);
 }
@@ -184,5 +235,25 @@
     background: rgba(0, 0, 0, 0.4);
     color: rgba(255, 255, 255, 0.9);
     border-color: rgba(0, 122, 255, 0.5);
+  }
+  .drawing-item__star {
+    color: rgba(255, 255, 255, 0.35);
+  }
+  .drawing-item__star:hover {
+    background: rgba(245, 184, 0, 0.18);
+    color: #ffc930;
+  }
+  .drawing-item--starred .drawing-item__star {
+    color: #ffc930;
+  }
+  .drawing-item--starred .drawing-item__star:hover {
+    background: rgba(245, 184, 0, 0.25);
+    color: #ffd866;
+  }
+  .drawing-item--starred:hover .drawing-item__actions {
+    background: rgba(30, 30, 30, 0.85);
+  }
+  .drawing-item--starred.drawing-item--active:hover .drawing-item__actions {
+    background: rgba(20, 50, 90, 0.9);
   }
 }

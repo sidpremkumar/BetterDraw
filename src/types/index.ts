@@ -5,6 +5,20 @@ export interface DrawingMetadata {
   updated_at: string;
   file_name: string;
   archived: boolean;
+  starred: boolean;
+}
+
+export interface DrawingVersion {
+  id: string;
+  created_at: string;
+  label: string;
+  element_count: number;
+  size: number;
+}
+
+export interface DrawingWithData {
+  meta: DrawingMetadata;
+  data: string;
 }
 
 export interface DrawingData {

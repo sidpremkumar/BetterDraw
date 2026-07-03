@@ -10,6 +10,7 @@ interface DrawingItemProps {
   onArchive?: () => void;
   onUnarchive?: () => void;
   onDelete?: () => void;
+  onToggleStar?: () => void;
   isArchived?: boolean;
 }
 
@@ -32,6 +33,7 @@ export function DrawingItem({
   onArchive,
   onUnarchive,
   onDelete,
+  onToggleStar,
   isArchived,
 }: DrawingItemProps) {
   const [isEditing, setIsEditing] = useState(false);
@@ -55,7 +57,7 @@ export function DrawingItem({
 
   return (
     <div
-      className={`drawing-item ${isActive ? "drawing-item--active" : ""} ${isArchived ? "drawing-item--archived" : ""}`}
+      className={`drawing-item ${isActive ? "drawing-item--active" : ""} ${isArchived ? "drawing-item--archived" : ""} ${drawing.starred ? "drawing-item--starred" : ""}`}
       onClick={onSelect}
       onDoubleClick={handleDoubleClick}
     >
@@ -77,6 +79,30 @@ export function DrawingItem({
           <span className="drawing-item__name">{drawing.name}</span>
           <span className="drawing-item__time">{timeAgo}</span>
           <div className="drawing-item__actions">
+            {onToggleStar && (
+              <button
+                className="drawing-item__action-btn drawing-item__star"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onToggleStar();
+                }}
+                aria-label={drawing.starred ? "Unstar drawing" : "Star drawing"}
+                aria-pressed={drawing.starred}
+              >
+                <svg
+                  width="12"
+                  height="12"
+                  viewBox="0 0 24 24"
+                  fill={drawing.starred ? "currentColor" : "none"}
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+                </svg>
+              </button>
+            )}
             <button
               className="drawing-item__action-btn drawing-item__rename"
               onClick={(e) => {

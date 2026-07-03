@@ -7,9 +7,11 @@ interface ToolbarProps {
   api: any;
   activeDrawingId: string | null;
   onScreenshot?: () => void;
+  onHistory?: () => void;
+  onImport?: () => void;
 }
 
-export function Toolbar({ api, activeDrawingId, onScreenshot }: ToolbarProps) {
+export function Toolbar({ api, activeDrawingId, onScreenshot, onHistory, onImport }: ToolbarProps) {
   if (!api || !activeDrawingId) return <div className="toolbar" />;
 
   const getSceneData = () => {
@@ -76,6 +78,20 @@ export function Toolbar({ api, activeDrawingId, onScreenshot }: ToolbarProps) {
             <path d="M9 3v4M15 3v4M9 17v4M15 17v4M3 9h4M3 15h4M17 9h4M17 15h4" />
           </svg>
           Screenshot
+        </button>
+        <button className="toolbar__btn" onClick={onImport} title="Import a .excalidraw file, replacing this drawing">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M12 3v12M7 10l5 5 5-5M5 21h14" />
+          </svg>
+          Import
+        </button>
+        <button className="toolbar__btn" onClick={onHistory} title="Version history">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M3 3v5h5" />
+            <path d="M3.05 13A9 9 0 106 5.3L3 8" />
+            <path d="M12 7v5l3 2" />
+          </svg>
+          History
         </button>
         <div className="toolbar__separator" />
         <button className="toolbar__btn" onClick={handleExportPng} title="Export as PNG">

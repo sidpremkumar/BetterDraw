@@ -1,11 +1,13 @@
 import { useState, useCallback } from "react";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import { downloadDir } from "@tauri-apps/api/path";
-import { save } from "@tauri-apps/plugin-dialog";
+import { save, open } from "@tauri-apps/plugin-dialog";
 import { exportToBlob } from "@excalidraw/excalidraw";
 import { Sidebar } from "./components/Sidebar/Sidebar";
 import { Canvas } from "./components/Canvas/Canvas";
 import { Toolbar } from "./components/Toolbar/Toolbar";
+import { HistoryPanel } from "./components/HistoryPanel/HistoryPanel";
+import { ImportDialog } from "./components/ImportDialog/ImportDialog";
 import { ScreenshotOverlay, type CaptureAction } from "./components/ScreenshotOverlay/ScreenshotOverlay";
 import { useDrawings } from "./hooks/useDrawings";
 import { useAutoSave } from "./hooks/useAutoSave";
@@ -18,6 +20,7 @@ function App() {
     drawings,
     activeDrawingId,
     activeDrawingData,
+    dataNonce,
     isLoading,
     selectDrawing,
     createDrawing,
@@ -26,12 +29,19 @@ function App() {
     archiveDrawingById,
     unarchiveDrawingById,
     renameDrawingById,
+    toggleStarById,
+    importDrawingFile,
+    importIntoActiveDrawing,
+    importJsonIntoActiveDrawing,
+    restoreVersionById,
   } = useDrawings();
 
   const { api, onApiReady } = useExcalidrawApi();
   const { scheduleAutoSave, flushSave } = useAutoSave(saveCurrentDrawing);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [screenshotMode, setScreenshotMode] = useState(false);
+  const [historyOpen, setHistoryOpen] = useState(false);
+  const [importOpen, setImportOpen] = useState(false);
 
   const handleScreenshotCapture = useCallback(
     async (rect: { x: number; y: number; width: number; height: number }, action: CaptureAction) => {
@@ -142,6 +152,55 @@ function App() {
     createDrawing(name);
   };
 
+  const handleImport = async () => {
+    await flushSave();
+    const selected = await open({
+      multiple: false,
+      filters: [{ name: "Excalidraw", extensions: ["excalidraw", "json"] }],
+    });
+    if (!selected || typeof selected !== "string") return;
+    try {
+      await importDrawingFile(selected);
+    } catch (err) {
+      console.error("Import failed:", err);
+      alert(`Could not import file: ${err}`);
+    }
+  };
+
+  const handleImportOverrideFile = async () => {
+    if (!activeDrawingId) return;
+    await flushSave();
+    const selected = await open({
+      multiple: false,
+      filters: [{ name: "Excalidraw", extensions: ["excalidraw", "json"] }],
+    });
+    if (!selected || typeof selected !== "string") return;
+    await importIntoActiveDrawing(selected);
+  };
+
+  const handleImportOverrideJson = async (content: string) => {
+    if (!activeDrawingId) return;
+    await flushSave();
+    await importJsonIntoActiveDrawing(content);
+  };
+
+  const handleRestoreVersion = async (versionId: string) => {
+    // Persist the live scene first so "Before restore" captures pending edits.
+    await flushSave();
+    await restoreVersionById(versionId);
+  };
+
+  const handleSaveVersion = async () => {
+    await flushSave();
+    if (!activeDrawingId) return [];
+    return cmds.createVersion(activeDrawingId, "Manual");
+  };
+
+  const activeDrawing = drawings.find((d) => d.id === activeDrawingId);
+  const currentElementCount = api
+    ? api.getSceneElements().filter((e: any) => !e.isDeleted).length
+    : 0;
+
   if (isLoading) {
     return (
       <div className="app-loading">
@@ -162,17 +221,25 @@ function App() {
         activeDrawingId={activeDrawingId}
         onSelect={handleSelectDrawing}
         onCreate={handleCreateDrawing}
+        onImport={handleImport}
         onDelete={deleteDrawingById}
         onArchive={archiveDrawingById}
         onUnarchive={unarchiveDrawingById}
         onRename={renameDrawingById}
+        onToggleStar={toggleStarById}
         collapsed={sidebarCollapsed}
         onToggleCollapse={() => setSidebarCollapsed(!sidebarCollapsed)}
       />
       <div className="main-area">
-        <Toolbar api={api} activeDrawingId={activeDrawingId} onScreenshot={() => setScreenshotMode(true)} />
+        <Toolbar
+          api={api}
+          activeDrawingId={activeDrawingId}
+          onScreenshot={() => setScreenshotMode(true)}
+          onHistory={() => setHistoryOpen(true)}
+          onImport={() => setImportOpen(true)}
+        />
         <Canvas
-          key={activeDrawingId}
+          key={`${activeDrawingId}-${dataNonce}`}
           drawingData={activeDrawingData}
           onApiReady={onApiReady}
           onAutoSave={scheduleAutoSave}
@@ -184,6 +251,23 @@ function App() {
           />
         )}
       </div>
+      {importOpen && activeDrawingId && (
+        <ImportDialog
+          onImportJson={handleImportOverrideJson}
+          onChooseFile={handleImportOverrideFile}
+          onClose={() => setImportOpen(false)}
+        />
+      )}
+      {historyOpen && activeDrawingId && (
+        <HistoryPanel
+          drawingId={activeDrawingId}
+          drawingName={activeDrawing?.name || "Untitled"}
+          currentElementCount={currentElementCount}
+          onRestore={handleRestoreVersion}
+          onSaveVersion={handleSaveVersion}
+          onClose={() => setHistoryOpen(false)}
+        />
+      )}
     </div>
   );
 }
